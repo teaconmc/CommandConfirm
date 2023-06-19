@@ -1,0 +1,22 @@
+modLoader = "javafml"
+loaderVersion = "[45,)"
+license = "MIT"
+[[mods]]
+modId = "commandconfirm"
+version = "${file.jarVersion}"
+displayName = "CommandConfirm"
+description = ''
+
+[[dependencies.commandconfirm]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.commandconfirm]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"
