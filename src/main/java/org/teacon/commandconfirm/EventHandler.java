@@ -7,6 +7,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = CommandConfirm.ID)
@@ -30,7 +31,16 @@ public class EventHandler {
         if (CommandHistory.checkPlayerCommand(player, rawCommand)) return;
 
         int count = -1;
-        for (var entry : context.getArguments().values()) {
+        var arguments = context.getArguments().values();
+        var child = context.getChild();
+        while (arguments.isEmpty() && child != null) {
+            arguments = child.getArguments().values();
+            child = child.getChild();
+        }
+        if (arguments == null) {
+            arguments = Collections.emptyList();
+        }
+        for (var entry : arguments) {
             if (entry.getResult() instanceof EntitySelector selector) {
                 try {
                     var entities = selector.findEntities(source);
