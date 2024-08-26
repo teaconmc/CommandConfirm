@@ -34,7 +34,7 @@ steps:
         exclude: ["refs/tags/**"]
 
   - name: publish
-    image: azul/zulu-openjdk-alpine:17
+    image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
     environment:
       GITEA_TOKEN:
         from_secret: gitea_token
