@@ -1,10 +1,8 @@
 package org.teacon.commandconfirm;
 
-import net.minecraftforge.fml.IExtensionPoint;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.network.NetworkConstants;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,12 +12,9 @@ public final class CommandConfirm {
 
     public static final Logger logger = LogManager.getLogger();
 
-    public CommandConfirm() {
+    public CommandConfirm(ModContainer modContainer) {
         logger.debug("CommandConfirm reached construction");
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SPEC);
-
-        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class,
-                () -> new IExtensionPoint.DisplayTest(() -> NetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+        modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC);
     }
 }

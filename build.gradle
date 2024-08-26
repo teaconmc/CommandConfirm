@@ -1,109 +1,76 @@
 plugins {
+    id 'java-library'
     id 'eclipse'
+    id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.neoforged.moddev' version '1.0.14'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    // Define wrapper values here so as to not have to always do so when updating gradlew.properties.
+    // Switching this to Wrapper.DistributionType.ALL will download the full gradle sources that comes with
+    // documentation attached on cursor hover of gradle classes and methods. However, this comes with increased
+    // file size for Gradle. If you do switch this to ALL, run the Gradle wrapper task twice afterwards.
+    // (Verify by checking gradle/wrapper/gradle-wrapper.properties to see if distributionUrl now points to `-all`)
+    distributionType = Wrapper.DistributionType.BIN
 }
 
 version = '1.0.2'
 group = 'org.teacon'
-archivesBaseName = 'CommandConfirm-Forge-1.20.1'
+archivesBaseName = 'CommandConfirm-NeoForge-1.21'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-minecraft {
-    mappings channel: 'official', version: '1.20.1'
+neoForge {
+    // Specify the version of NeoForge to use.
+    version = project.neo_version
 
-//    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
 
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'blist'
-            mods {
-                blist {
-                    source sourceSets.main
-                }
-            }
+            client()
         }
 
         server {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'blist'
-
-            mods {
-                blist {
-                    source sourceSets.main
-                }
-            }
+            server()
+            programArgument '--nogui'
         }
 
-        gameTestServer {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'blist'
-            mods {
-                blist {
-                    source sourceSets.main
-                }
-            }
-        }
+        // applies to all the run configs above
+        configureEach {
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'blist', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            mods {
-                blist {
-                    source sourceSets.main
-                }
-            }
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            logLevel = org.slf4j.event.Level.DEBUG
         }
     }
-}
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    // Put repositories for dependencies here
-    // ForgeGradle automatically adds the Forge maven and Maven Central for you
-
-    // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-    // flatDir {
-    //     dir 'libs'
-    // }
-
-}
-
-dependencies {
-    minecraft 'net.minecraftforge:forge:1.20.1-47.0.1'
-}
-
-// Example for how to get properties into the manifest for reading at runtime.
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "CommandConfirm-Forge-1.20.1",
-                "Specification-Vendor"    : "TeaConMC",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "TeaConMC",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        ])
+    mods {
+        // define mod <-> source bindings
+        // these are used to tell the game which sources are for which mod
+        // mostly optional in a single mod project
+        // but multi mod projects should define one per mod
+        area_control {
+            sourceSet(sourceSets.main)
+        }
     }
-}
 
-tasks.register('devJar', Jar) {
-    archiveClassifier = "dev"
-    dependsOn classes
-    from {
-        sourceSets.main.output
+    unitTest {
+        enable()
+        testedMod = mods.area_control
     }
 }
 
@@ -114,12 +81,8 @@ tasks.register('srcJar', Jar) {
     }
 }
 
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
-
 artifacts {
-    archives devJar
+    archives jar
     archives srcJar
 }
 
@@ -130,10 +93,9 @@ publishing {
 
             artifact jar
             artifact srcJar
-            artifact devJar
 
             pom {
-                name = 'CommandConfirm Forge 1.20.1'
+                name = 'CommandConfirm NeoForge 1.21'
                 description = 'Require extra confirmation before executing commands infecting large amount of entities.'
                 licenses {
                     license {

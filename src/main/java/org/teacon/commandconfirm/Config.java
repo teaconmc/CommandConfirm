@@ -1,14 +1,15 @@
 package org.teacon.commandconfirm;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config {
-    static final ForgeConfigSpec SPEC;
+    static final ModConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.ConfigValue<Integer> warningLimit;
+    public static final ModConfigSpec.ConfigValue<Integer> warningLimit;
 
     static {
-        var builder = new ForgeConfigSpec.Builder();
+        var builder = new ModConfigSpec.Builder();
 
         warningLimit = builder.comment("Amount of entities involved in a command that triggers the confirmation warning")
                 .define("warningLimit", 32);
