@@ -8,15 +8,15 @@ displayName = "CommandConfirm"
 description = ''
 
 [[dependencies.commandconfirm]]
-modId = "forge"
-mandatory = true
-versionRange = "[47,)"
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.commandconfirm]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20.1,1.21)"
+type = "required"
+versionRange = "[1.21,1.22)"
 ordering = "NONE"
 side = "BOTH"
