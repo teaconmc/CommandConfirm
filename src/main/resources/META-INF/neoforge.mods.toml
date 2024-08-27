@@ -3,7 +3,7 @@ loaderVersion = "[45,)"
 license = "MIT"
 [[mods]]
 modId = "commandconfirm"
-version = "${file.jarVersion}"
+version = "${mod_version}"
 displayName = "CommandConfirm"
 description = ''
 
