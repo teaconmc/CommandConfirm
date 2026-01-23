@@ -14,7 +14,7 @@ public final class CommandHistory {
 
     public static boolean checkPlayerCommand(ServerPlayer player, String rawCommand) {
         var now = System.currentTimeMillis();
-        var previous = history.put(player.getGameProfile().getId(), new Entry(rawCommand, now));
+        var previous = history.put(player.getGameProfile().id(), new Entry(rawCommand, now));
         if (previous == null) return false;
         if (now - previous.time > 5000) return false;
         return previous.rawCommand.equals(rawCommand);

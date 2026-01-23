@@ -10,13 +10,13 @@ description = ''
 [[dependencies.commandconfirm]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21,)"
+versionRange = "[26,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.commandconfirm]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21,1.22)"
+versionRange = "[26,)"
 ordering = "NONE"
 side = "BOTH"
